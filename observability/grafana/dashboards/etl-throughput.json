@@ -1,0 +1,31 @@
+{
+  "title": "Phase Runner ETL Throughput",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "1m",
+  "panels": [
+    {
+      "type": "timeseries",
+      "title": "Records processed",
+      "gridPos": { "x": 0, "y": 0, "w": 24, "h": 9 },
+      "targets": [
+        {
+          "expr": "phase_runner_etl_throughput_records",
+          "legendFormat": "{{pipeline}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ops",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "red", "value": null },
+              { "color": "green", "value": 1500 }
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

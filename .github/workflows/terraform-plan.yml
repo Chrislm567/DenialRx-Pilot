@@ -1,0 +1,27 @@
+name: Terraform Plan
+
+on:
+  pull_request:
+    paths:
+      - 'infra/**'
+      - '.github/workflows/terraform-plan.yml'
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.5.7
+      - name: Terraform format
+        working-directory: infra/environments/dev
+        run: terraform fmt -check -recursive
+      - name: Terraform init
+        working-directory: infra/environments/dev
+        run: terraform init
+      - name: Terraform plan
+        working-directory: infra/environments/dev
+        env:
+          TF_VAR_db_password: dummy-password
+        run: terraform plan -lock=false -input=false -out=tfplan
