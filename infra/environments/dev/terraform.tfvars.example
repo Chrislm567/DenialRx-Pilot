@@ -1,0 +1,6 @@
+region       = "us-west-2"
+project      = "phase-runner"
+environment  = "dev"
+db_username  = "phase_runner"
+db_password  = "generate-a-strong-password"
+allowed_cidr_blocks = ["10.0.0.0/16"]

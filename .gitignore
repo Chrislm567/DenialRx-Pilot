@@ -1,0 +1,15 @@
+node_modules
+.next
+out
+coverage
+.env
+.env.*
+!.env.example
+terraform.tfstate
+terraform.tfstate.*
+*.tfvars
+!.tfvars.example
+.playwright-cache
+
+test-results
+playwright-report
