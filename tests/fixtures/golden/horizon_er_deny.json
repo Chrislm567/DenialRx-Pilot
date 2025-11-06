@@ -1,0 +1,19 @@
+{
+  "payer": "Horizon Medicaid Advantage",
+  "pack_version": "2024.1",
+  "engine_version": "0.1.0",
+  "dry_run": true,
+  "decisions": [
+    {
+      "rule_id": "HOR-001",
+      "decision": "deny",
+      "reason": "Avoidable ER diagnosis discharged home.",
+      "severity": "error",
+      "applied": false,
+      "references": [
+        "https://example.org/horizon/er-avoidable"
+      ],
+      "flags": []
+    }
+  ]
+}

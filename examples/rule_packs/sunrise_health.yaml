@@ -1,0 +1,39 @@
+metadata:
+  payer: Sunrise Health Commercial
+  pack_version: "2024.1"
+  engine_version: "0.1.0"
+  description: Imaging authorization guardrails derived from the RCM checklist.
+  tags: [imaging, commercial]
+rules:
+  - id: SUN-001
+    description: Require manual review for imaging charges over $5k.
+    when:
+      all:
+        - field: claim.service_line.cpt
+          op: in
+          value: [70450, 70551, 70552, 70553, 72141, 72142, 72146, 72147, 72148, 72149, 72156, 72158]
+        - field: claim.charge_amount
+          op: gt
+          value: 5000
+    then:
+      decision: pend
+      severity: warning
+      reason: High cost imaging requires prior authorization.
+      references:
+        - https://example.org/sunrise/imaging-auth
+  - id: SUN-002
+    description: Always route pediatric imaging to manual review.
+    when:
+      all:
+        - field: patient.age
+          op: lt
+          value: 18
+        - field: claim.service_line.cpt
+          op: in
+          value: [70450, 70551, 70552, 70553, 72141, 72142, 72146, 72147, 72148, 72149, 72156, 72158]
+    then:
+      decision: manual_review
+      severity: info
+      reason: Pediatric imaging requires clinician approval.
+      references:
+        - https://example.org/sunrise/peds

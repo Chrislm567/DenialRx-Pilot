@@ -1,0 +1,19 @@
+{
+  "payer": "Sunrise Health Commercial",
+  "pack_version": "2024.1",
+  "engine_version": "0.1.0",
+  "dry_run": true,
+  "decisions": [
+    {
+      "rule_id": "SUN-001",
+      "decision": "pend",
+      "reason": "High cost imaging requires prior authorization.",
+      "severity": "warning",
+      "applied": false,
+      "references": [
+        "https://example.org/sunrise/imaging-auth"
+      ],
+      "flags": []
+    }
+  ]
+}

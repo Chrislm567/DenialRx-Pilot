@@ -1,0 +1,6 @@
+claim:
+  service_line:
+    cpt: 70450
+  charge_amount: 7500
+patient:
+  age: 45

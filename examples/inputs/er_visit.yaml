@@ -1,0 +1,7 @@
+encounter:
+  location: emergency_room
+  disposition: home
+  primary_diagnosis: R51
+patient:
+  is_pregnant: false
+  age_months: 360
