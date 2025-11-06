@@ -1,0 +1,15 @@
+# Node
+node_modules/
+
+# Python
+__pycache__/
+.venv/
+.mypy_cache/
+.pytest_cache/
+
+# Coverage & reports
+coverage/
+.htmlcov/
+
+# OS
+.DS_Store

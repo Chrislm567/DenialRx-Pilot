@@ -1,0 +1,13 @@
+# Default owners
+*       @denialrx/engineering
+
+# Critical directories
+/apps/api/          @denialrx/api-team
+/apps/web/          @denialrx/web-team
+/apps/workers/      @denialrx/workers
+/packages/rules/    @denialrx/rules
+/packages/ml/       @denialrx/ml
+/packages/x12/      @denialrx/interop
+/packages/observability/ @denialrx/observability
+/infra/             @denialrx/platform
+/tests/             @denialrx/quality
