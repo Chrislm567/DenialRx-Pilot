@@ -1,0 +1,7 @@
+blank_issues_enabled: false
+default_labels:
+  - triage
+contact_links:
+  - name: Phase Runner Runbook
+    url: https://github.com/denialrx/phase-runner/blob/main/RUNBOOK.md
+    about: Review operational guidance before opening incidents.

@@ -1,0 +1,15 @@
+- name: bug
+  color: d73a4a
+  description: Unexpected behavior or defect
+- name: feature
+  color: a2eeef
+  description: Net-new capability or enhancement
+- name: chore
+  color: cfd3d7
+  description: Maintenance or infrastructure task
+- name: triage
+  color: fbca04
+  description: Needs prioritization
+- name: security
+  color: 5319e7
+  description: Security review required
