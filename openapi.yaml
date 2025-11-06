@@ -1,0 +1,223 @@
+openapi: 3.0.3
+info:
+  title: DenialRx Appeals API
+  version: 0.3.0
+  description: |
+    API for drafting and submitting payer appeals with immutable audit events.
+servers:
+  - url: http://localhost:8000
+paths:
+  /healthz:
+    get:
+      summary: Health check
+      responses:
+        '200':
+          description: Service status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  timestamp:
+                    type: string
+                    format: date-time
+  /appeals/draft:
+    post:
+      summary: Generate draft content for an appeal
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AppealDraft'
+      responses:
+        '200':
+          description: Drafted appeal artifacts
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  appeal_draft:
+                    $ref: '#/components/schemas/AppealDraft'
+                  letter:
+                    type: string
+                  phi_check:
+                    $ref: '#/components/schemas/PHICheckResult'
+                  email_preview:
+                    type: object
+  /appeals/submit:
+    post:
+      summary: Submit a finalized appeal
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AppealSubmission'
+      responses:
+        '200':
+          description: Accepted submission status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppealStatus'
+        '422':
+          description: PHI guardrail violation
+  /appeals/{appeal_id}:
+    get:
+      summary: Fetch status of a submitted appeal
+      parameters:
+        - in: path
+          name: appeal_id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Appeal status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppealStatus'
+        '404':
+          description: Appeal not found
+  /appeals/{appeal_id}/audit:
+    get:
+      summary: Retrieve audit trail for an appeal
+      parameters:
+        - in: path
+          name: appeal_id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Audit history
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  appeal_id:
+                    type: string
+                  events:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/AuditRecord'
+        '404':
+          description: Appeal not found
+components:
+  schemas:
+    DenialScenario:
+      type: string
+      enum:
+        - lack_of_medical_necessity
+        - prior_auth_missing
+        - out_of_network
+        - experimental_treatment
+        - coding_error
+    AppealDraft:
+      type: object
+      required:
+        - draft_id
+        - patient_first_name
+        - patient_last_name
+        - member_id
+        - payer_name
+        - provider_npi
+        - denial_code
+        - scenario
+        - clinical_summary
+      properties:
+        draft_id:
+          type: string
+        patient_first_name:
+          type: string
+        patient_last_name:
+          type: string
+        member_id:
+          type: string
+        payer_name:
+          type: string
+        provider_npi:
+          type: string
+        denial_code:
+          type: string
+        scenario:
+          $ref: '#/components/schemas/DenialScenario'
+        clinical_summary:
+          type: string
+        attachments:
+          type: array
+          items:
+            type: string
+    AppealSubmission:
+      allOf:
+        - $ref: '#/components/schemas/AppealDraft'
+        - type: object
+          required:
+            - submitted_by
+          properties:
+            submitted_by:
+              type: string
+            callback_url:
+              type: string
+              format: uri
+    AppealStatus:
+      type: object
+      required:
+        - appeal_id
+        - status
+        - updated_at
+        - payload_hash
+      properties:
+        appeal_id:
+          type: string
+        status:
+          type: string
+        updated_at:
+          type: string
+          format: date-time
+        payload_hash:
+          type: string
+    AuditRecord:
+      type: object
+      required:
+        - appeal_id
+        - action
+        - actor
+        - occurred_at
+        - payload_hash
+        - payload_schema
+      properties:
+        appeal_id:
+          type: string
+        action:
+          type: string
+        actor:
+          type: string
+        occurred_at:
+          type: string
+          format: date-time
+        payload_hash:
+          type: string
+        payload_schema:
+          type: string
+    PHICheckResult:
+      type: object
+      required:
+        - compliant
+        - reasons
+        - redacted_payload
+      properties:
+        compliant:
+          type: boolean
+        reasons:
+          type: array
+          items:
+            type: string
+        redacted_payload:
+          type: object

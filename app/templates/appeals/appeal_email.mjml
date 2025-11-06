@@ -1,0 +1,19 @@
+<mjml>
+  <mj-head>
+    <mj-title>Appeal Submission Notice</mj-title>
+  </mj-head>
+  <mj-body>
+    <mj-section>
+      <mj-column>
+        <mj-text font-size="20px" font-weight="bold">Appeal Submitted</mj-text>
+        <mj-text>
+          Appeal {{ appeal_id }} for member {{ draft.member_id }} has been submitted to {{ draft.payer_name }}.
+        </mj-text>
+        <mj-text>
+          Denial code: {{ draft.denial_code }}<br/>
+          Scenario: {{ draft.scenario.value.replace('_', ' ') | title }}
+        </mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>
