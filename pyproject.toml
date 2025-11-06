@@ -1,0 +1,46 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "denialrx"
+version = "0.1.0"
+description = "DenialRx Phase Runner ingest and normalization toolkit"
+authors = [{name = "Phase Runner Team"}]
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "pydantic>=2.6",
+    "psycopg2-binary>=2.9",
+    "rich>=13.7",
+    "click>=8.1",
+    "pandas>=2.1",
+    "pyyaml>=6.0",
+    "orjson>=3.10"
+]
+
+[project.scripts]
+dq-check = "packages.dq.cli:dq_check"
+
+[project.optional-dependencies]
+tests = [
+    "pytest>=8.0",
+    "pytest-cov>=4.1",
+    "pytest-asyncio>=0.23",
+    "freezegun>=1.4"
+]
+
+[tool.pytest.ini_options]
+addopts = "-ra --cov=packages --cov-report term-missing"
+testpaths = ["tests"]
+markers = [
+    "integration: tests that require Postgres",
+]
+
+[tool.coverage.run]
+branch = true
+source = ["packages"]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true
