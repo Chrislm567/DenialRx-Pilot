@@ -1,0 +1,26 @@
+{% set scenario_messages = {
+    'lack_of_medical_necessity': 'Clinical documentation demonstrates the requested therapy meets policy criteria and has produced durable outcomes for the member.',
+    'prior_auth_missing': 'A timely prior authorization was submitted and acknowledged; the reference number {{ draft.denial_code }} is attached for review.',
+    'out_of_network': 'The member lacked access to in-network alternatives within the policy mandated distance and continuity of care is clinically required.',
+    'experimental_treatment': 'The therapy is supported by peer reviewed literature and is recognized by the relevant specialty guidelines for the presented diagnosis.',
+    'coding_error': 'Billing records confirm the original claim used the industry standard coding and the denial stemmed from a payer-side processing error.'
+} %}
+
+Dear {{ draft.payer_name }},
+
+Re: Appeal for {{ draft.patient_first_name }} {{ draft.patient_last_name }} (Member ID {{ draft.member_id }})
+
+We are submitting an appeal regarding denial code {{ draft.denial_code }}.
+
+{{ scenario_messages[draft.scenario.value] }}
+
+Clinical Summary:
+{{ draft.clinical_summary }}
+
+Attachments Provided:
+{% if draft.attachments %}{% for attachment in draft.attachments %}- {{ attachment }}
+{% endfor %}{% else %}- No additional documents supplied.
+{% endif %}
+
+Sincerely,
+DenialRx Appeals Automation Team
