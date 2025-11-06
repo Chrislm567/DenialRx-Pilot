@@ -1,0 +1,14 @@
+version: '3.8'
+services:
+  api:
+    build:
+      context: .
+      dockerfile: e2e/Dockerfile
+    environment:
+      - UVICORN_HOST=0.0.0.0
+      - UVICORN_PORT=8000
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./:/app
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
