@@ -1,0 +1,44 @@
+name: ingest-ci
+
+on:
+  push:
+    branches: [phase/ingest]
+  pull_request:
+    branches: [phase/ingest]
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_USER: ingest
+          POSTGRES_PASSWORD: ingest
+          POSTGRES_DB: ingest
+        ports:
+          - 6543:5432
+        options: >-
+          --health-cmd "pg_isready -U ingest" --health-interval 10s --health-timeout 5s --health-retries 5
+    env:
+      TEST_DSN: postgresql://ingest:ingest@localhost:6543/ingest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e .[tests]
+      - name: Run PHI scanner
+        run: scripts/phi_scan.py
+      - name: Run tests
+        env:
+          PGHOST: localhost
+          PGPORT: 6543
+          PGUSER: ingest
+          PGPASSWORD: ingest
+        run: |
+          pytest
