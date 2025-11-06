@@ -1,0 +1,6 @@
+claim:
+  service_line:
+    cpt: 72149
+  charge_amount: 2500
+patient:
+  age: 10

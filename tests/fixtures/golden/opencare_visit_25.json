@@ -1,0 +1,17 @@
+{
+  "payer": "OpenCare Value PPO",
+  "pack_version": "2024.2",
+  "engine_version": "0.1.0",
+  "dry_run": true,
+  "decisions": [
+    {
+      "rule_id": "OCV-003",
+      "decision": "deny",
+      "reason": "Utilization exceeds hard cap without prior approval.",
+      "severity": "error",
+      "applied": false,
+      "references": [],
+      "flags": []
+    }
+  ]
+}

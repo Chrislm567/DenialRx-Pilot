@@ -1,0 +1,56 @@
+metadata:
+  payer: OpenCare Value PPO
+  pack_version: "2024.2"
+  engine_version: "0.1.0"
+  description: Physical therapy visit management based on utilization thresholds.
+  tags: [pt, commercial]
+rules:
+  - id: OCV-001
+    description: Approve therapy when utilization is within threshold.
+    when:
+      all:
+        - field: encounter.service
+          op: eq
+          value: physical_therapy
+        - field: member.ytd_visits
+          op: lte
+          value: 12
+    then:
+      decision: approve
+      severity: info
+      reason: Utilization within payer allowance.
+  - id: OCV-002
+    description: Pend therapy when utilization above threshold but below hard cap.
+    when:
+      all:
+        - field: encounter.service
+          op: eq
+          value: physical_therapy
+        - field: member.ytd_visits
+          op: gt
+          value: 12
+        - field: member.ytd_visits
+          op: lte
+          value: 20
+    then:
+      decision: pend
+      severity: warning
+      reason: Clinical review required for extended utilization.
+  - id: OCV-003
+    description: Deny therapy when utilization exceeds hard cap without approval.
+    when:
+      all:
+        - field: encounter.service
+          op: eq
+          value: physical_therapy
+        - field: member.ytd_visits
+          op: gt
+          value: 20
+        - not:
+            field: encounter.has_preapproval
+            op: eq
+            value: true
+    then:
+      decision: deny
+      severity: error
+      reason: Utilization exceeds hard cap without prior approval.

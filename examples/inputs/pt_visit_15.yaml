@@ -1,0 +1,5 @@
+encounter:
+  service: physical_therapy
+  has_preapproval: false
+member:
+  ytd_visits: 15

@@ -1,0 +1,17 @@
+{
+  "payer": "OpenCare Value PPO",
+  "pack_version": "2024.2",
+  "engine_version": "0.1.0",
+  "dry_run": true,
+  "decisions": [
+    {
+      "rule_id": "OCV-002",
+      "decision": "pend",
+      "reason": "Clinical review required for extended utilization.",
+      "severity": "warning",
+      "applied": false,
+      "references": [],
+      "flags": []
+    }
+  ]
+}

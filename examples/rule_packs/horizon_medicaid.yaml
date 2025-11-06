@@ -1,0 +1,66 @@
+metadata:
+  payer: Horizon Medicaid Advantage
+  pack_version: "2024.1"
+  engine_version: "0.1.0"
+  description: Avoidable ER visit denials with pregnancy and pediatric exceptions.
+  tags: [er, medicaid]
+  last_reviewed: "2024-05-15"
+rules:
+  - id: HOR-001
+    description: Deny avoidable ER visits when discharged home.
+    when:
+      all:
+        - field: encounter.location
+          op: eq
+          value: emergency_room
+        - field: encounter.disposition
+          op: eq
+          value: home
+        - field: encounter.primary_diagnosis
+          op: in
+          value: [R51, J02.9, K30]
+        - not:
+            field: patient.is_pregnant
+            op: eq
+            value: true
+        - field: patient.age_months
+          op: gte
+          value: 24
+    then:
+      decision: deny
+      severity: error
+      reason: Avoidable ER diagnosis discharged home.
+      references:
+        - https://example.org/horizon/er-avoidable
+  - id: HOR-002
+    description: Approve avoidable diagnoses when pregnancy indicator present.
+    when:
+      all:
+        - field: patient.is_pregnant
+          op: eq
+          value: true
+        - field: encounter.primary_diagnosis
+          op: in
+          value: [R51, J02.9, K30]
+    then:
+      decision: approve
+      severity: info
+      reason: Pregnancy exception to avoidable ER list.
+      references:
+        - https://example.org/horizon/pregnancy-exception
+  - id: HOR-003
+    description: Approve avoidable diagnoses for infants under 2 years old.
+    when:
+      all:
+        - field: patient.age_months
+          op: lt
+          value: 24
+        - field: encounter.primary_diagnosis
+          op: in
+          value: [R51, J02.9, K30]
+    then:
+      decision: approve
+      severity: info
+      reason: Infant exception to avoidable ER list.
+      references:
+        - https://example.org/horizon/infant-exception
