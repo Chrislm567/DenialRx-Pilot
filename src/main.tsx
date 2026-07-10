@@ -1,6 +1,7 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 
+import { AuthGate } from './components/AuthGate';
 import { Dashboard } from './components/Dashboard';
 import './index.css';
 
@@ -12,6 +13,8 @@ if (!rootElement) {
 
 createRoot(rootElement).render(
   <StrictMode>
-    <Dashboard />
+    <AuthGate>
+      <Dashboard />
+    </AuthGate>
   </StrictMode>,
 );
