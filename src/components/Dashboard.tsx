@@ -1,8 +1,8 @@
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 
 import { denialDatabase } from '../../constants/denialDatabase';
-import { mockClaims } from '../../constants/mockClaims';
 import type { Claim } from '../../types/billing';
+import { useClaims } from '../hooks/useClaims';
 import { DenialTable, type DenialTableClaim } from './DenialTable';
 import { MetricsSummary } from './MetricsSummary';
 
@@ -15,8 +15,9 @@ const buildActiveClaims = (claims: Claim[]): DenialTableClaim[] =>
     }));
 
 export function Dashboard() {
-  const [claims] = useState<Claim[]>(mockClaims);
+  const { claims, dataSource, isLoading } = useClaims();
   const activeClaims = useMemo(() => buildActiveClaims(claims), [claims]);
+  const sourceLabel = dataSource === 'firestore' ? 'Firestore data' : 'Mock operational data';
 
   return (
     <main className="min-h-screen bg-slate-100 px-4 py-6 text-slate-950 sm:px-6 lg:px-8">
@@ -34,7 +35,7 @@ export function Dashboard() {
             </p>
           </div>
           <div className="rounded-md border border-slate-200 bg-white px-3 py-2 text-xs font-medium text-slate-500 shadow-sm">
-            Mock operational data only
+            {isLoading ? 'Checking Firestore…' : sourceLabel}
           </div>
         </header>
 
