@@ -46,6 +46,18 @@ export function Dashboard() {
     setCarcOverrides((current) => ({ ...current, [claim.id]: carcCode }));
   };
 
+  const handleAppealExport = (claimId: string) => {
+    hasLocalEdits.current = true;
+    setClaims((current) =>
+      current.map((claim) =>
+        claim.id === claimId ? { ...claim, status: 'Appealed' } : claim,
+      ),
+    );
+    setSelectedClaim((current) =>
+      current?.id === claimId ? { ...current, status: 'Appealed' } : current,
+    );
+  };
+
   return (
     <main className="min-h-screen bg-slate-100 px-4 py-6 text-slate-950 sm:px-6 lg:px-8">
       <div className="mx-auto flex w-full max-w-screen-2xl flex-col gap-6">
@@ -96,7 +108,11 @@ export function Dashboard() {
         onClose={() => setIsIntakeOpen(false)}
         onSubmit={handleIntakeSubmit}
       />
-      <ClaimDetailsPane claim={selectedClaim} onClose={() => setSelectedClaim(null)} />
+      <ClaimDetailsPane
+        claim={selectedClaim}
+        onClose={() => setSelectedClaim(null)}
+        onExportSuccess={handleAppealExport}
+      />
     </main>
   );
 }
