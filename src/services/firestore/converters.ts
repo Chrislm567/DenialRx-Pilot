@@ -10,7 +10,8 @@ import type { AppealTemplate, Claim, Denial } from '../../../types/billing';
 
 const createConverter = <T extends { id: string }>(): FirestoreDataConverter<T> => ({
   toFirestore(modelObject: WithFieldValue<T>): DocumentData {
-    const { id: _id, ...documentData } = modelObject;
+    const documentData: DocumentData = { ...modelObject };
+    delete documentData.id;
     return documentData;
   },
   fromFirestore(
