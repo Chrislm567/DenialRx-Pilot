@@ -28,14 +28,18 @@ const initialForm = {
   rawText: '',
 };
 
+type IntakeForm = typeof initialForm;
+
 export function IntakeModal({ isOpen, existingClaimIds, onClose, onSubmit }: IntakeModalProps) {
   const [step, setStep] = useState(1);
-  const [form, setForm] = useState(initialForm);
+  const [form, setForm] = useState<IntakeForm>(initialForm);
 
   if (!isOpen) return null;
 
   const updateField = (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    setForm((current) => ({ ...current, [event.target.name]: event.target.value }));
+    const name = event.target.name as keyof IntakeForm;
+    const value = event.target.value as IntakeForm[typeof name];
+    setForm((current) => ({ ...current, [name]: value }));
   };
 
   const handleRawText = (event: ChangeEvent<HTMLTextAreaElement>) => {
@@ -74,7 +78,9 @@ export function IntakeModal({ isOpen, existingClaimIds, onClose, onSubmit }: Int
   };
 
   const duplicateId = existingClaimIds.includes(form.claimId.trim());
-  const canContinue = form.claimId.trim() && form.mockPatientName.trim() && form.insurancePayer.trim();
+  const canContinue = Boolean(
+    form.claimId.trim() && form.mockPatientName.trim() && form.insurancePayer.trim(),
+  );
   const canSubmit = Number(form.billedAmount) > 0 && !duplicateId;
 
   return (
