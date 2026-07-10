@@ -3,6 +3,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { denialDatabase } from '../../constants/denialDatabase';
 import type { Claim } from '../../types/billing';
 import { useClaims } from '../hooks/useClaims';
+import { ClaimDetailsPane } from './ClaimDetailsPane';
 import { DenialTable, type DenialTableClaim } from './DenialTable';
 import { IntakeModal, type IntakeSubmission } from './IntakeModal';
 import { MetricsSummary } from './MetricsSummary';
@@ -26,6 +27,7 @@ export function Dashboard() {
   const [claims, setClaims] = useState<Claim[]>(loadedClaims);
   const [carcOverrides, setCarcOverrides] = useState<Record<string, string>>({});
   const [isIntakeOpen, setIsIntakeOpen] = useState(false);
+  const [selectedClaim, setSelectedClaim] = useState<DenialTableClaim | null>(null);
   const hasLocalEdits = useRef(false);
 
   useEffect(() => {
@@ -84,7 +86,7 @@ export function Dashboard() {
               {activeClaims.length} claims currently require revenue-cycle action.
             </p>
           </div>
-          <DenialTable claims={activeClaims} />
+          <DenialTable claims={activeClaims} onSelectClaim={setSelectedClaim} />
         </section>
       </div>
 
@@ -94,6 +96,7 @@ export function Dashboard() {
         onClose={() => setIsIntakeOpen(false)}
         onSubmit={handleIntakeSubmit}
       />
+      <ClaimDetailsPane claim={selectedClaim} onClose={() => setSelectedClaim(null)} />
     </main>
   );
 }
