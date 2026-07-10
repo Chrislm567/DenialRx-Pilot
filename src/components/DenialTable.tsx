@@ -6,6 +6,7 @@ export interface DenialTableClaim extends Claim {
 
 interface DenialTableProps {
   claims: DenialTableClaim[];
+  onSelectClaim: (claim: DenialTableClaim) => void;
 }
 
 const statusClasses: Record<Exclude<ClaimStatus, 'Paid'>, string> = {
@@ -19,7 +20,7 @@ const currencyFormatter = new Intl.NumberFormat('en-US', {
   currency: 'USD',
 });
 
-export function DenialTable({ claims }: DenialTableProps) {
+export function DenialTable({ claims, onSelectClaim }: DenialTableProps) {
   return (
     <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
       <div className="overflow-x-auto">
@@ -67,7 +68,7 @@ export function DenialTable({ claims }: DenialTableProps) {
                 <td className="whitespace-nowrap px-5 py-4">
                   <button
                     type="button"
-                    onClick={() => console.log('DenialRx claim details:', claim)}
+                    onClick={() => onSelectClaim(claim)}
                     className="rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-400 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                   >
                     View Details
