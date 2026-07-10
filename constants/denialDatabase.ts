@@ -7,7 +7,7 @@ export const denialDatabase: AppealTemplate[] = [
     argumentStrategy:
       'Prove an emergent or routing exception, or attach retrospective medical documentation supporting authorization.',
     standardLetterBody:
-      'We request reconsideration of the denial assigned under CARC 197. The submitted service met the applicable emergent, routing, or retrospective review exception criteria. Supporting documentation is attached to establish the clinical circumstances, service timeline, and medical basis for retrospective authorization. Please reprocess the claim after reviewing the enclosed records and authorization evidence.',
+      'Re: Claim {{claimId}} | Balance {{balance}}\n\nTo {{payer}} Appeals Department:\n\nWe request reconsideration of the denial assigned under CARC 197. The submitted service met the applicable emergent, routing, or retrospective review exception criteria. Supporting documentation is attached to establish the clinical circumstances, service timeline, and medical basis for retrospective authorization. Please reprocess claim {{claimId}} for the disputed balance of {{balance}} after reviewing the enclosed records and authorization evidence.',
   },
   {
     carcCode: '50',
@@ -15,7 +15,7 @@ export const denialDatabase: AppealTemplate[] = [
     argumentStrategy:
       'Reference objective clinical criteria, payer policy requirements, and recognized treatment guidelines.',
     standardLetterBody:
-      'We request reconsideration of the denial assigned under CARC 50. The service was medically necessary based on the documented symptoms, objective findings, prior treatment history, and applicable clinical criteria. The attached records demonstrate alignment with recognized guidelines and the payer\'s published coverage requirements. Please review the supporting evidence and reprocess the claim.',
+      'Re: Claim {{claimId}} | Balance {{balance}}\n\nTo {{payer}} Appeals Department:\n\nWe request reconsideration of the denial assigned under CARC 50. The service was medically necessary based on the documented symptoms, objective findings, prior treatment history, and applicable clinical criteria. The attached records demonstrate alignment with recognized guidelines and the payer\'s published coverage requirements. Please review the supporting evidence and reprocess claim {{claimId}} for {{balance}}.',
   },
   {
     carcCode: '29',
@@ -23,6 +23,6 @@ export const denialDatabase: AppealTemplate[] = [
     argumentStrategy:
       'Present electronic clearinghouse submission records and 277 claim acceptance timeline evidence.',
     standardLetterBody:
-      'We request reconsideration of the denial assigned under CARC 29. Electronic submission records show that the claim entered the clearinghouse workflow within the applicable filing period. The attached transmission history and 277 claim acknowledgment timeline document timely receipt and acceptance activity. Please apply the timely filing exception and reprocess the claim.',
+      'Re: Claim {{claimId}} | Balance {{balance}}\n\nTo {{payer}} Appeals Department:\n\nWe request reconsideration of the denial assigned under CARC 29. Electronic submission records show that the claim entered the clearinghouse workflow within the applicable filing period. The attached transmission history and 277 claim acknowledgment timeline document timely receipt and acceptance activity. Please apply the timely filing exception and reprocess claim {{claimId}} for {{balance}}.',
   },
 ];
