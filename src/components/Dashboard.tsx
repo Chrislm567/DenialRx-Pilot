@@ -33,7 +33,7 @@ interface DashboardNotice {
 }
 
 export function Dashboard() {
-  const { claims: loadedClaims, dataSource, isLoading } = useClaims();
+  const { claims: loadedClaims, dataSource, isLoading, workspaceId } = useClaims();
   const [claims, setClaims] = useState<Claim[]>(loadedClaims);
   const [carcOverrides, setCarcOverrides] = useState<Record<string, string>>({});
   const [isIntakeOpen, setIsIntakeOpen] = useState(false);
@@ -52,10 +52,11 @@ export function Dashboard() {
   const sourceLabel = dataSource === 'firestore' ? 'Firestore data' : 'Mock operational data';
 
   const handleIntakeSubmit = ({ claim, carcCode }: IntakeSubmission) => {
+    const workspaceClaim: Claim = { ...claim, workspaceId };
     hasLocalEdits.current = true;
-    setClaims((current) => [...current, claim]);
-    setCarcOverrides((current) => ({ ...current, [claim.id]: carcCode }));
-    setNotice({ message: `Claim ${claim.id} added to the local work queue.`, tone: 'success' });
+    setClaims((current) => [...current, workspaceClaim]);
+    setCarcOverrides((current) => ({ ...current, [workspaceClaim.id]: carcCode }));
+    setNotice({ message: `Claim ${workspaceClaim.id} added to the local work queue.`, tone: 'success' });
   };
 
   const handleAppealExport = async (claimId: string) => {
@@ -75,7 +76,7 @@ export function Dashboard() {
     }
 
     try {
-      await updateClaim(claimId, { status: 'Appealed' });
+      await updateClaim(claimId, workspaceId, { status: 'Appealed' });
       setNotice({ message: `Appeal exported and claim ${claimId} was saved to Firestore.`, tone: 'success' });
     } catch {
       setNotice({ message: `Appeal exported, but Firestore could not save claim ${claimId}. The local status is still Appealed.`, tone: 'warning' });
