@@ -5,6 +5,7 @@ import { renderAppealLetter } from './appealLetter';
 
 const baseClaim: Claim = {
   id: 'CLM-TEST-1',
+  workspaceId: 'mock-test-workspace',
   mockPatientName: 'Mock Patient Test',
   insurancePayer: 'Mock Test Payer',
   dateOfService: '2026-07-10',
