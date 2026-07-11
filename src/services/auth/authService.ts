@@ -11,3 +11,13 @@ export const ensureAnonymousSession = async (): Promise<User> => {
   const credential = await signInAnonymously(firebaseAuth);
   return credential.user;
 };
+
+export const getCurrentWorkspaceId = (): string => {
+  const workspaceId = firebaseAuth.currentUser?.uid;
+
+  if (!workspaceId) {
+    throw new Error('An authenticated DenialRx workspace session is required.');
+  }
+
+  return workspaceId;
+};
