@@ -36,9 +36,10 @@ service cloud.firestore {
       );
       allow read: if isAuthenticated() &&
         (memberId == request.auth.uid || hasRole(workspaceId, ['admin']));
-      allow update, delete: if hasRole(workspaceId, ['admin']) &&
+      allow update: if hasRole(workspaceId, ['admin']) &&
         request.resource.data.workspaceId == workspaceId &&
         request.resource.data.userId == memberId;
+      allow delete: if hasRole(workspaceId, ['admin']) && memberId != request.auth.uid;
     }
 
     match /claims/{claimId} {
