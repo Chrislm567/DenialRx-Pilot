@@ -19,15 +19,13 @@ service cloud.firestore {
     }
 
     match /claims/{claimId} {
-      allow get, delete: if ownsExistingWorkspace();
-      allow list: if isAuthenticated();
+      allow read, delete: if ownsExistingWorkspace();
       allow create: if ownsIncomingWorkspace();
       allow update: if preservesWorkspaceOwnership();
     }
 
     match /denials/{denialId} {
-      allow get, delete: if ownsExistingWorkspace();
-      allow list: if isAuthenticated();
+      allow read, delete: if ownsExistingWorkspace();
       allow create: if ownsIncomingWorkspace();
       allow update: if preservesWorkspaceOwnership();
     }
