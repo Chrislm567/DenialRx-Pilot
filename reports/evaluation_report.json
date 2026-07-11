@@ -1,0 +1,36 @@
+{
+  "auc":1.0,
+  "average_precision":1.0,
+  "threshold_scenarios":[
+    {
+      "threshold":0.25,
+      "precision":0.9508196721,
+      "recall":1.0,
+      "fpr":0.0164835165,
+      "tpr":1.0,
+      "review_rate":0.2541666667,
+      "expected_cost_savings":3542.0,
+      "notes":"High precision"
+    },
+    {
+      "threshold":0.4,
+      "precision":1.0,
+      "recall":1.0,
+      "fpr":0.0,
+      "tpr":1.0,
+      "review_rate":0.2416666667,
+      "expected_cost_savings":3596.0,
+      "notes":"High precision"
+    },
+    {
+      "threshold":0.55,
+      "precision":1.0,
+      "recall":1.0,
+      "fpr":0.0,
+      "tpr":1.0,
+      "review_rate":0.2416666667,
+      "expected_cost_savings":3596.0,
+      "notes":"High precision"
+    }
+  ]
+}
