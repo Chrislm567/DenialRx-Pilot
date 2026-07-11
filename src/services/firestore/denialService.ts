@@ -19,20 +19,32 @@ const denialsCollection = collection(
   FIRESTORE_COLLECTIONS.denials,
 ).withConverter(denialConverter);
 
-export const listDenials = async (): Promise<Denial[]> => {
-  const snapshot = await getDocs(denialsCollection);
+export const listDenials = async (workspaceId: string): Promise<Denial[]> => {
+  const workspaceQuery = query(denialsCollection, where('workspaceId', '==', workspaceId));
+  const snapshot = await getDocs(workspaceQuery);
   return snapshot.docs.map((denialDocument) => denialDocument.data());
 };
 
-export const listDenialsByClaimId = async (claimId: string): Promise<Denial[]> => {
-  const denialQuery = query(denialsCollection, where('claimId', '==', claimId));
+export const listDenialsByClaimId = async (
+  claimId: string,
+  workspaceId: string,
+): Promise<Denial[]> => {
+  const denialQuery = query(
+    denialsCollection,
+    where('workspaceId', '==', workspaceId),
+    where('claimId', '==', claimId),
+  );
   const snapshot = await getDocs(denialQuery);
   return snapshot.docs.map((denialDocument) => denialDocument.data());
 };
 
-export const getDenialById = async (denialId: string): Promise<Denial | null> => {
+export const getDenialById = async (
+  denialId: string,
+  workspaceId: string,
+): Promise<Denial | null> => {
   const snapshot = await getDoc(doc(denialsCollection, denialId));
-  return snapshot.exists() ? snapshot.data() : null;
+  const denial = snapshot.exists() ? snapshot.data() : null;
+  return denial?.workspaceId === workspaceId ? denial : null;
 };
 
 export const saveDenial = async (denial: Denial): Promise<void> => {
@@ -41,11 +53,12 @@ export const saveDenial = async (denial: Denial): Promise<void> => {
 
 export const updateDenial = async (
   denialId: string,
-  updates: Partial<Omit<Denial, 'id'>>,
+  workspaceId: string,
+  updates: Partial<Omit<Denial, 'id' | 'workspaceId'>>,
 ): Promise<void> => {
   await setDoc(
     doc(denialsCollection, denialId),
-    { id: denialId, ...updates } as Denial,
+    { id: denialId, workspaceId, ...updates } as Denial,
     { merge: true },
   );
 };
