@@ -8,7 +8,7 @@ import {
 } from '../utils/textParser';
 
 export interface IntakeSubmission {
-  claim: Claim;
+  claim: Omit<Claim, 'workspaceId'>;
   carcCode: SupportedCarcCode;
 }
 
