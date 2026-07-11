@@ -6,28 +6,55 @@ service cloud.firestore {
       return request.auth != null;
     }
 
-    function ownsExistingWorkspace() {
-      return isAuthenticated() && resource.data.workspaceId == request.auth.uid;
+    function membershipPath(workspaceId) {
+      return /databases/$(database)/documents/workspaces/$(workspaceId)/members/$(request.auth.uid);
     }
 
-    function ownsIncomingWorkspace() {
-      return isAuthenticated() && request.resource.data.workspaceId == request.auth.uid;
+    function hasMembership(workspaceId) {
+      return isAuthenticated() && exists(membershipPath(workspaceId));
     }
 
-    function preservesWorkspaceOwnership() {
-      return ownsExistingWorkspace() && ownsIncomingWorkspace();
+    function hasRole(workspaceId, roles) {
+      return hasMembership(workspaceId) && get(membershipPath(workspaceId)).data.role in roles;
+    }
+
+    function incomingWorkspace() {
+      return request.resource.data.workspaceId;
+    }
+
+    function existingWorkspace() {
+      return resource.data.workspaceId;
+    }
+
+    match /workspaces/{workspaceId}/members/{memberId} {
+      allow create: if isAuthenticated() && (
+        (workspaceId == request.auth.uid && memberId == request.auth.uid &&
+          request.resource.data.workspaceId == workspaceId &&
+          request.resource.data.userId == memberId &&
+          request.resource.data.role == 'admin') ||
+        hasRole(workspaceId, ['admin'])
+      );
+      allow read: if isAuthenticated() &&
+        (memberId == request.auth.uid || hasRole(workspaceId, ['admin']));
+      allow update, delete: if hasRole(workspaceId, ['admin']) &&
+        request.resource.data.workspaceId == workspaceId &&
+        request.resource.data.userId == memberId;
     }
 
     match /claims/{claimId} {
-      allow read, delete: if ownsExistingWorkspace();
-      allow create: if ownsIncomingWorkspace();
-      allow update: if preservesWorkspaceOwnership();
+      allow read: if hasRole(existingWorkspace(), ['admin', 'biller', 'viewer']);
+      allow create: if hasRole(incomingWorkspace(), ['admin', 'biller']);
+      allow update: if incomingWorkspace() == existingWorkspace() &&
+        hasRole(existingWorkspace(), ['admin', 'biller']);
+      allow delete: if hasRole(existingWorkspace(), ['admin', 'biller']);
     }
 
     match /denials/{denialId} {
-      allow read, delete: if ownsExistingWorkspace();
-      allow create: if ownsIncomingWorkspace();
-      allow update: if preservesWorkspaceOwnership();
+      allow read: if hasRole(existingWorkspace(), ['admin', 'biller', 'viewer']);
+      allow create: if hasRole(incomingWorkspace(), ['admin', 'biller']);
+      allow update: if incomingWorkspace() == existingWorkspace() &&
+        hasRole(existingWorkspace(), ['admin', 'biller']);
+      allow delete: if hasRole(existingWorkspace(), ['admin', 'biller']);
     }
 
     match /appealTemplates/{carcCode} {
