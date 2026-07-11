@@ -22,12 +22,11 @@ export function useAuthSession(): AuthSessionState {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
-    const unsubscribe = subscribeToAuth((nextUser) => {
-      setUser(nextUser);
-    });
+    const unsubscribe = subscribeToAuth(setUser);
 
     void ensureAnonymousSession()
       .then(async (authenticatedUser) => {
+        setUser(authenticatedUser);
         const access = await ensurePersonalWorkspaceMembership(authenticatedUser.uid);
         setWorkspaceAccess(access);
         setIsLoading(false);
